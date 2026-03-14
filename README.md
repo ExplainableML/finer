@@ -6,12 +6,12 @@
 **Authors:** [Rui Xiao](https://www.eml-munich.de/people/rui-xiao), [Sanghwan Kim](https://kim-sanghwan.github.io/), [Yongqin Xian](https://xianyongqin.github.io/), [Zeynep Akata](https://www.eml-munich.de/people/zeynep-akata), [Stephan Alaniz](https://www.telecom-paris.fr/)
 
 
-## Abstract
-Multimodal large language models (MLLMs) still struggle with hallucinations, especially when queries involve fine-grained objects, attributes, and relations. Existing hallucination benchmarks mainly focus on coarse image-level mismatches, making it unclear whether current MLLMs can reliably reject subtle but incorrect visual claims.
-
-We introduce **FINER**, short for **FI**ne-grained **NE**gative que**R**ies, together with two benchmarks: **FINER-CompreCap** and **FINER-DOCCI**. FINER evaluates hallucination under four settings: **Multi-obj**, **Multi-attr**, **Multi-rel**, and **Wh** questions. Our benchmarks reveal that MLLMs often fail when fine-grained mismatches are hidden among otherwise correct image details. 
+## TL;DR
+We introduce **FINER**, short for **FI**ne-grained **NE**gative que**R**ies, together with two benchmark studies: **FINER-CompreCap** and **FINER-DOCCI**. FINER evaluates hallucination under four settings: **Multi-obj**, **Multi-attr**, **Multi-rel**, and **Wh** questions. Our benchmark studies reveal that MLLMs often fail when fine-grained mismatches are hidden among otherwise correct image details. 
 
 To improve this, we propose **FINER-Tuning**, a preference-learning approach based on Direct Preference Optimization (DPO). FINER-Tuning uses **minimally edited fine-grained positive and negative queries** so that the model learns to accept correct claims and reject precise but incorrect ones. Across four frontier MLLMs, FINER-Tuning substantially improves performance on FINER, also generalizes to existing hallucination benchmarks, and preserves or improves general multimodal capabilities.
+
+We refer to our [project page](https://img.shields.io/badge/Project-Website-blue.svg)](https://sean-xr.github.io/finer-website/), where we walk you through our storylines.
 
 ## Methodology
 ![](assets/finer_overview.png "Overview of FINER")
