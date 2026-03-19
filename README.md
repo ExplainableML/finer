@@ -1,5 +1,5 @@
 # [CVPR 2026] FINER: MLLMs Hallucinate under Fine-grained Negative Queries
-[![Paper](https://img.shields.io/badge/paper-arXiv-B31B1B.svg)](ADD_ARXIV_LINK_HERE)
+[![Paper](https://img.shields.io/badge/paper-arXiv-B31B1B.svg)](https://arxiv.org/abs/2603.17662)
 [![Project Page](https://img.shields.io/badge/Project-Website-blue.svg)](https://explainableml.github.io/finer-project/)
 [![Models](https://img.shields.io/badge/HuggingFace-FINER-FFD700?logo=huggingface&logoColor=yellow)](https://huggingface.co/collections/xiaorui638/finer-models)
 [![FINER-Tuning Data](https://img.shields.io/badge/HuggingFace-FINER-FFD700?logo=huggingface&logoColor=yellow)](https://huggingface.co/datasets/xiaorui638/FINER-Tuning-data)
