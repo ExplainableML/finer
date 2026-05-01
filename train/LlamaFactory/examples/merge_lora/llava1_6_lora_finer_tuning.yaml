@@ -1,0 +1,15 @@
+# ==== base model (must match what you trained) ====
+model_name_or_path: llava-hf/llava-v1.6-vicuna-7b-hf   
+template: llava_next
+trust_remote_code: true
+
+# ==== your trained adapter ====
+finetuning_type: lora
+adapter_name_or_path: saves/llava1_6-7b/lora/finer_tuning_40k_pon
+
+
+# ==== export settings ====
+export_dir: output/FINER-LLaVA-1_6-7B
+export_size: 5                # number of shards; tweak if your FS dislikes large files
+export_device: cpu            # merges on CPU to avoid VRAM usage
+export_legacy_format: false   # writes modern safetensors format

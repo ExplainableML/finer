@@ -1,0 +1,14 @@
+# ==== base model (must match what you trained) ====
+model_name_or_path: OpenGVLab/InternVL3_5-14B-HF   # or 1B/2B/4B/14B/etc as used
+template: intern_vl
+trust_remote_code: true
+
+# ==== your trained adapter ====
+finetuning_type: lora
+adapter_name_or_path: saves/internvl3_5-14b/lora/finer_tuning_160k_pon   
+
+# ==== export settings ====
+export_dir: output/FINER-InternVL3_5-14B
+export_size: 5                # number of shards; tweak if your FS dislikes large files
+export_device: cpu            # merges on CPU to avoid VRAM usage
+export_legacy_format: false   # writes modern safetensors format
