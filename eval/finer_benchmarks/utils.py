@@ -4,6 +4,7 @@ import argparse, re, torch, pandas as pd
 from tqdm import tqdm
 from collections import defaultdict
 from io import StringIO
+from PIL import Image as PILImage
 
 
 LETTER    = ["A", "B", "C", "D", "E"]
@@ -17,14 +18,36 @@ def mcq_text(question: str, choices: list[str]) -> str:
     lines += ["", "Please answer with a single capital letter (A, B, C, D, or E):"]
     return "\n".join(lines)
 
-def build_msgs(img_path: str, prompt: str):
+
+def build_msgs(image, prompt: str):
+    """
+    Build multimodal chat messages.
+
+    image can be:
+      1. local image path: str or Path
+      2. PIL.Image.Image, e.g. from Hugging Face Dataset Image() column
+
+    This keeps your old path-based behavior for FINER-DOCCI,
+    while also supporting direct PIL images for HF datasets.
+    """
+    if isinstance(image, Path):
+        image = str(image)
+
+    if isinstance(image, str):
+        image_obj = image
+    elif isinstance(image, PILImage.Image):
+        image_obj = image.convert("RGB")
+    else:
+        raise TypeError(f"Unsupported image type for build_msgs(): {type(image)}")
+
     return [{
         "role": "user",
         "content": [
-            {"type": "image", "image": img_path},
+            {"type": "image", "image": image_obj},
             {"type": "text",  "text": prompt},
         ],
     }]
+
 
 def match_choice(gen_text: str):
     # We could make this more robust, however, in practice, the model will always output A, B, C, D, or E. So I decided to make it simple.

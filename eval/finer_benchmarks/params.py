@@ -23,16 +23,33 @@ def parse_args():
         default=None,
         help="HF model name or local model path. If omitted, use the default for --model_type.",
     )
+
+    # Local CSV + image-folder mode.
+    # This is useful for FINER-DOCCI, where users should download images separately.
     ap.add_argument(
         "--csv",
-        required=True,
-        help="MCQ CSV, delimiter auto-detected.",
+        default=None,
+        help="MCQ CSV, delimiter auto-detected. Required if --hf_dataset is not used.",
     )
     ap.add_argument(
         "--images",
-        required=True,
-        help="Directory of images.",
+        default=None,
+        help="Directory of images. Required if --hf_dataset is not used.",
     )
+
+    # Hugging Face dataset mode.
+    # This is useful for FINER-CompreCap, where images can be bundled in the HF dataset.
+    ap.add_argument(
+        "--hf_dataset",
+        default=None,
+        help="HF dataset repo id, e.g. xiaorui638/finer-comprecap-mcq. If set, use HF dataset mode.",
+    )
+    ap.add_argument(
+        "--hf_split",
+        default="multi_obj",
+        help="HF split name, e.g. multi_attr, multi_obj, multi_rel, or wh.",
+    )
+
     ap.add_argument(
         "--out",
         required=True,
@@ -49,5 +66,11 @@ def parse_args():
 
     if args.model is None:
         args.model = DEFAULT_MODELS[args.model_type]
+
+    if args.hf_dataset is None:
+        if args.csv is None:
+            raise ValueError("--csv is required when --hf_dataset is not used.")
+        if args.images is None:
+            raise ValueError("--images is required when --hf_dataset is not used.")
 
     return args
