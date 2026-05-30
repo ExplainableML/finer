@@ -4,6 +4,8 @@ from pathlib import Path
 import torch
 import pandas as pd
 from tqdm import tqdm
+from PIL import Image as PILImage
+from datasets import load_dataset
 
 from params import parse_args
 from utils import (
@@ -170,7 +172,7 @@ def predict_letter(
 def run_local_csv_inference(args, model, processor):
     """
     Original local CSV + local image directory mode.
-    This is kept for FINER-DOCCI or any dataset where images should be downloaded separately.
+    This is the mode we used when developing the project
     """
     img_root = Path(args.images)
 
@@ -207,14 +209,11 @@ def run_local_csv_inference(args, model, processor):
 def run_hf_dataset_inference(args, model, processor):
     """
     Hugging Face dataset mode.
-
-    Expected HF dataset columns:
-      - image: HF Image() column, loaded as PIL image
-      - image_filename: original filename, used for output CSV and pair accuracy
-      - qtype, question, choice1..choice5, gt_index
+    
+    Currently, FINER-CompreCap (primarily recommended) contains images directly in dataset
+    Due to the scale and DOCCI liscence, FINER-DOCCI only contains image names inside the dataset,
+    users are required to download DOCCI images seperately and pass args.images
     """
-    from datasets import load_dataset
-
     ds = load_dataset(args.hf_dataset, split=args.hf_split)
     print(f"Loaded {len(ds):,} rows from HF dataset: {args.hf_dataset} / split={args.hf_split}")
 
@@ -222,14 +221,32 @@ def run_hf_dataset_inference(args, model, processor):
     rows_for_output = []
 
     for row in tqdm(ds, total=len(ds), desc="inference"):
-        if "image_filename" not in row:
-            raise ValueError(
-                "HF dataset mode expects an `image_filename` column. "
-                "This is needed so the output CSV still has a string `image` column "
-                "for pair accuracy and traceability."
-            )
+        raw_image = row["image"]
 
-        image = row["image"].convert("RGB")
+        if isinstance(raw_image, PILImage.Image):
+            # FINER-CompreCap: embedded image bytes.
+            image = raw_image.convert("RGB")
+            image_name = str(row.get("image_filename", "unknown.jpg"))
+
+        elif isinstance(raw_image, str):
+            # FINER-DOCCI: image filename only.
+            if args.images is None:
+                raise ValueError(
+                    "This HF dataset stores image filenames only. "
+                    "Please pass --images /path/to/docci/images."
+                )
+
+            image_name = raw_image
+            image = Path(args.images) / image_name
+
+            if not image.exists():
+                raise FileNotFoundError(f"Image not found: {image}")
+
+        else:
+            raise TypeError(
+                f"Unsupported HF image column type: {type(raw_image)}. "
+                "Expected PIL image or filename string."
+            )
 
         choices = [
             str(row.get(f"choice{i}", ""))
@@ -250,7 +267,8 @@ def run_hf_dataset_inference(args, model, processor):
         pred_idx.append(pred)
 
         # Keep all non-image columns.
-        # The HF `image` column is a PIL image and should not be written to CSV.
+        # For FINER-CompreCap, row["image"] is PIL and cannot be written to CSV.
+        # For FINER-DOCCI, row["image"] is already a filename, but we still normalize below.
         out_row = {
             k: v
             for k, v in row.items()
@@ -259,7 +277,7 @@ def run_hf_dataset_inference(args, model, processor):
 
         # Keep compatibility with compute_pair_accuracy(),
         # which expects a string column called `image`.
-        out_row["image"] = str(row["image_filename"])
+        out_row["image"] = image_name
 
         rows_for_output.append(out_row)
 
