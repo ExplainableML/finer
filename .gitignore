@@ -15,3 +15,4 @@ __pycache__/
 /eval/finer_benchmarks/clean_anno.py
 /eval/finer_benchmarks/review_mcq_anno.py
 /eval/finer_benchmarks/review_mcq_anno.sh
+/eval/finer_benchmarks/build_hf_dataset_finer_docci.py
