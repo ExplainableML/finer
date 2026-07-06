@@ -110,7 +110,7 @@ VLMEvalKit's `run.py`. See the example scripts (`FINER-Qwen2_5-VL-7B.sh`, `FINER
 cd eval/VLMEvalKit
 bash FINER-InternVL3_5-8B-Custom.sh
 ```
-Note: For the InternVL-series, we converted their weights from the huggingface format to InternVL's custom format in order to fit into the suage of `VLMEvalKit`. So (FINER-InternVL3_5-8B-Custom)[https://huggingface.co/xiaorui638/FINER-InternVL3_5-8B-Custom] and (FINER-InternVL3_5-8B)[https://huggingface.co/xiaorui638/FINER-InternVL3_5-8B] are inherently the same.
+Note: For the InternVL-series, we converted their weights from the huggingface format to InternVL's custom format in order to fit into the suage of `VLMEvalKit`. So [FINER-InternVL3_5-8B-Custom](https://huggingface.co/xiaorui638/FINER-InternVL3_5-8B-Custom) and [FINER-InternVL3_5-8B](https://huggingface.co/xiaorui638/FINER-InternVL3_5-8B) are inherently the same.
 
 ## Citations
 If you find our work useful, please star this repo and cite:
